@@ -1,0 +1,79 @@
+{
+  "id": "4830380",
+  "name": "垃圾分类科普",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "745284",
+      "name": "个人中心",
+      "font_class": "icon03",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "1167182",
+      "name": "视频",
+      "font_class": "shipin",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "6866628",
+      "name": "用户管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "7050553",
+      "name": "表信息管理",
+      "font_class": "biaoxinxiguanli",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "17700394",
+      "name": "审核记录",
+      "font_class": "shenhe3x",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "18248911",
+      "name": "识别记录",
+      "font_class": "shibiejilu",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "19797401",
+      "name": "图片管理-02",
+      "font_class": "tupianguanli-02",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "22054453",
+      "name": "题目管理",
+      "font_class": "timuguanli_on",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "27007907",
+      "name": "识别记录",
+      "font_class": "shibiejilu1",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "42682952",
+      "name": "垃圾分类",
+      "font_class": "lajifenlei",
+      "unicode": "ebb3",
+      "unicode_decimal": 60339
+    }
+  ]
+}
