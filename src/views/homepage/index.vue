@@ -11,6 +11,9 @@
           {{ item }}
         </a>
       </nav>
+      <div class="search-sort">
+        <el-input v-model="searchQuery" placeholder="请输入搜索内容" @keyup.enter="handleSearch" class="search-input" />
+      </div>
       <div class="auth" v-if="!state.token">
         <router-link class="auth-link" to="/login">登录</router-link>
         <span class="auth-divider">|</span>
@@ -41,6 +44,14 @@
         <component :is="currentComponent" />
       </transition>
     </main>
+
+    <!-- 搜索结果浮动框 -->
+    <el-dialog v-model="searchResultsVisible" title="搜索结果" width="30%" :before-close="handleClose">
+      <el-table :data="searchResults" style="width: 100%">
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="detail" label="分类" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -52,7 +63,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import request from '/@/utils/request';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-const { locale, t } = useI18n();
+const { t } = useI18n();
 
 const state = reactive<any>({
   token: false,
@@ -67,6 +78,48 @@ const activeTab = ref(0);
 const components = [Introduce, answer, communal, Recognition];
 const currentComponent = shallowRef(components[0]);
 const router = useRouter();
+
+const searchQuery = ref('');
+const searchResults = ref<any[]>([]);
+const searchResultsVisible = ref(false);
+
+const handleSearch = async () => {
+  if (searchQuery.value.trim()) {
+    try {
+      const response = await request.get('/api/category/all', { params: { name: searchQuery.value } });
+      if (response.code == 0) {
+        ElMessage({
+          type: 'success',
+          message: '搜索成功',
+        });
+        // 处理搜索结果，例如显示浮动框
+        showSearchResults(response.data);
+      } else {
+        ElMessage({
+          type: 'error',
+          message: response.msg,
+        });
+      }
+    } catch (error) {
+      ElMessage({
+        type: 'error',
+        message: '搜索失败，请稍后重试',
+      });
+    }
+    // 清除输入框内容
+    searchQuery.value = '';
+  }
+};
+
+const showSearchResults = (results: any[]) => {
+  searchResults.value = results;
+  searchResultsVisible.value = true;
+};
+
+const handleClose = (done: () => void) => {
+  done();
+};
+
 const switchTab = (index: number) => {
   activeTab.value = index;
   currentComponent.value = components[index];
@@ -74,30 +127,30 @@ const switchTab = (index: number) => {
 
 const onHandleCommandClick = (path: string) => {
   if (path === 'logOut') {
-		ElMessageBox({
-			closeOnClickModal: false,
-			closeOnPressEscape: false,
-			title: t('message.user.logOutTitle'),
-			message: t('message.user.logOutMessage'),
-			showCancelButton: true,
-			confirmButtonText: t('message.user.logOutConfirm'),
-			cancelButtonText: t('message.user.logOutCancel'),
-			buttonSize: 'default',
-			beforeClose: (action, instance, done) => {
-				if (action === 'confirm') {
-					instance.confirmButtonLoading = true;
-					instance.confirmButtonText = t('message.user.logOutExit');
-					setTimeout(() => {
-						done();
-						setTimeout(() => {
-							instance.confirmButtonLoading = false;
-						}, 300);
-					}, 700);
-				} else {
-					done();
-				}
-			},
-		})
+    ElMessageBox({
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      title: t('message.user.logOutTitle'),
+      message: t('message.user.logOutMessage'),
+      showCancelButton: true,
+      confirmButtonText: t('message.user.logOutConfirm'),
+      cancelButtonText: t('message.user.logOutCancel'),
+      buttonSize: 'default',
+      beforeClose: (action, instance, done) => {
+        if (action === 'confirm') {
+          instance.confirmButtonLoading = true;
+          instance.confirmButtonText = t('message.user.logOutExit');
+          setTimeout(() => {
+            done();
+            setTimeout(() => {
+              instance.confirmButtonLoading = false;
+            }, 300);
+          }, 700);
+        } else {
+          done();
+        }
+      },
+    })
     .then(async () => {
       // 清除缓存/token等
       Session.clear();
@@ -106,10 +159,11 @@ const onHandleCommandClick = (path: string) => {
       window.location.reload();
     })
     .catch(() => { });
-	} else {
-		router.push(path);
-	}
+  } else {
+    router.push(path);
+  }
 };
+
 onMounted(() => {
   const userName = Cookies.get('userName');
   if (Session.get('token')) {
@@ -210,6 +264,20 @@ onMounted(() => {
   background: #3498db;
 }
 
+.search-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-input {
+  width: 200px;
+}
+
+.sort-select {
+  width: 120px;
+}
+
 .auth {
   display: flex;
   align-items: center;
@@ -240,7 +308,6 @@ onMounted(() => {
 
 .main-content {
   flex: 1;
-  /* padding: 0 150px; */
 }
 
 .footer {
@@ -263,7 +330,6 @@ onMounted(() => {
 }
 
 @media (max-width: 1200px) {
-
   .header,
   .main-content {
     padding: 20px 100px;
