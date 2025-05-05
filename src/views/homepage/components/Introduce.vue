@@ -3,7 +3,7 @@
     <div class="carousel">
       <el-carousel indicator-position="outside" height="800px">
         <el-carousel-item v-for="(item, index) in state.data" :key="index">
-          <el-image :src="item.img" style="width: 100%;" />
+          <el-image :src="item.img"  fit="contain" style="width: 100%; height: 100%; display: block;" />
         </el-carousel-item>
       </el-carousel>
     </div>
