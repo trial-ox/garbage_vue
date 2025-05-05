@@ -7,7 +7,17 @@
       <div class="header">
         <div class="model">
           <el-select v-model="model" placeholder="请选择模型" size="large" style="width: 240px" @change="filterWeights">
-            <el-option v-for="item in state.model_items" :key="item.value" :label="item.label" :value="item.value" />
+            <el-tooltip
+              v-for="item in state.model_items"
+              :key="item.value"
+              class="box-item"
+              effect="dark"
+              :content="modelDescriptions[item.value] || '暂无描述'"
+              placement="right"
+              :hide-after="0"
+            >
+              <el-option :key="item.value" :label="item.label" :value="item.value" />
+            </el-tooltip>
           </el-select>
         </div>
         <div class="weight" style="margin-left: 20px">
@@ -70,6 +80,19 @@ const state = reactive({
     model_name: '',
   },
 });
+const modelDescriptions = {
+  "VGGNet":       "结构简洁规整，全用3x3小卷积核堆叠加深网络。证明了深度重要性，参数量大但迁移学习效果好。",
+  "LeNet":        "早期CNN里程碑，成功用于手写数字识别。确立卷积、池化、全连接基本结构范式，影响深远。",
+  "ShuffleNetV2": "高效移动端CNN，除FLOPs外更关注实测速度与内存访问。核心是改进的通道混洗与通道分割。",
+  "AlexNet":      "2012年ImageNet突破性冠军模型。首次用ReLU、Dropout、GPU加速，引爆深度学习热潮。",
+  "RegNet":       "通过探索网络设计空间规律，生成一系列简洁、规则且性能优异的高效网络架构，可扩展性强。",
+  "DenseNet":     "核心是密集连接块，层层直连极致促进特征重用。参数高效但训练时特征图拼接导致内存消耗较大。",
+  "MobileNetV2":  "谷歌轻量级移动端模型，引入倒置残差和线性瓶颈结构。结合深度可分离卷积，平衡效率与精度。",
+  "GoogLeNet": "引入Inception模块并行多尺度卷积与池化。大量用1x1卷积降维，提升网络效率和性能。",
+  "ResNet":       "提出残差块和快捷连接，革命性解决深度网络退化问题，使得训练数百上千层网络成为可能。",
+  "MobileNetV3":  "结合前代优点，通过神经架构搜索(NAS)自动优化结构。引入SE模块和h-swish激活函数。",
+  "EfficientNet": "通过复合缩放方法系统性地同时优化网络深度、宽度和分辨率。效率极高，性能优越，参数量少。",
+};
 
 const handleAvatarSuccessone: UploadProps['onSuccess'] = (response, uploadFile) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw!);
